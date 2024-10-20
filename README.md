@@ -11,22 +11,16 @@ docker run --name postgres -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres:1
 
 docker build -t kamailio:local .
 
-docker run --name kamailio \
---network host \
--v $(pwd)/etc:/etc/kamailio \
--d kamailio:local
+docker run --name kamailio --network host -v $(pwd)/etc:/etc/kamailio -d kamailio:local
+
+docker exec -it kamailio sngrep
 
 ## Build Freeswitch
-docker build \
---build-arg TOKEN=pat_9GLDnLG9uxxH524XFp4nM4Wk \
--t freeswitch:local .
+docker build --build-arg TOKEN=pat_9GLDnLG9uxxH524XFp4nM4Wk -t freeswitch:local .
 
-docker run --name freeswitch \
---network host \
---cap-add SYS_NICE \
--v $(pwd)/etc:/etc/freeswitch \
--v ~/Documents/freeswitch/scripts/perl:/scripts \
--d freeswitch:local
+docker run --name freeswitch --network host --cap-add SYS_NICE -v $(pwd)/etc:/etc/freeswitch -v ~/Documents/freeswitch/scripts/perl:/scripts -d freeswitch:local
+
+docker exec -it freeswitch fs_cli
 
 ## Implementation Details
 
