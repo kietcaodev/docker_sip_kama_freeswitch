@@ -6,7 +6,8 @@ The projects demonstrates how tenants softphones and FreeSWITCH PBXs can be conn
 
 Remote softphones register on edge SIP routers (Kamailio), that accept registrations and route SIP requests to pre-configured softphone PBX (FreeSWITCH). In response to SIP invite, PBX simultaneously rings extension on the corresponding local and remote softphones or sends SIP to PSTN gateway (Twilio). Local PBX softphones are able to reach out to remote softphones via the same SIP router.
 
-## Build
+## Build Kamailio && Postgresql
+docker run --name postgres -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres:15
 
 docker build -t kamailio:local .
 
@@ -14,6 +15,18 @@ docker run --name kamailio \
 --network host \
 -v $(pwd)/etc:/etc/kamailio \
 -d kamailio:local
+
+## Build Freeswitch
+docker build \
+--build-arg TOKEN=pat_9GLDnLG9uxxH524XFp4nM4Wk \
+-t freeswitch:local .
+
+docker run --name freeswitch \
+--network host \
+--cap-add SYS_NICE \
+-v $(pwd)/etc:/etc/freeswitch \
+-v ~/Documents/freeswitch/scripts/perl:/scripts \
+-d freeswitch:local
 
 ## Implementation Details
 
