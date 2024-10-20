@@ -12,6 +12,8 @@ if [ -e "/etc/kamailio/kamailio-temp.cfg" ]; then
 fi
 
 trap 'kamctl stop' INT TERM
+export PGPASSWORD=admin
+kamdbctl create
 kamailio -DD -P /run/kamailio/kamailio.pid -f /etc/kamailio/kamailio.cfg &
 pid="$!"
 wait $pid
